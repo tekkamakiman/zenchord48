@@ -309,7 +309,7 @@
             <button class="btn mono" id="nPlus" type="button" aria-label="Nを1増やす">＋</button>
           </div>
           <button class="btn" id="randomBtn" type="button">ランダム</button>
-          <button class="btn" id="copyBtn" type="button">Nをコピー</button>
+          <button class="btn" id="copyBtn" type="button">URLをコピー</button>
           <p class="n-msg" id="nMsg" role="status"></p>
         </div>
       </div>
@@ -615,6 +615,7 @@
           progSummary.appendChild(s);
         });
         nowChords.textContent = names.map(function (nm, i) { return nm || ("#" + bars[i]); }).join(" → ");
+        try { history.replaceState(null, "", "?n=" + n.toString()); } catch (e) {}
       }
 
       /* ================= 音 (Web Audio) ================= */
@@ -766,12 +767,23 @@
         render();
       });
       document.getElementById("copyBtn").addEventListener("click", function () {
-        var text = currentN().toString();
-        function done() { nMsg.textContent = "N = " + Number(currentN()).toLocaleString("ja-JP") + " をコピーしました。"; }
+        var text = location.origin + location.pathname + "?n=" + currentN().toString();
+        function done() { nMsg.textContent = "この進行の URL をコピーしました。"; }
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(done, function () { nMsg.textContent = "コピーできませんでした。N は " + text + " です。"; });
-        } else { nMsg.textContent = "N は " + text + " です。"; }
+          navigator.clipboard.writeText(text).then(done, function () { nMsg.textContent = "コピーできませんでした。URL は " + text + " です。"; });
+        } else { nMsg.textContent = "この進行の URL は " + text + " です。"; }
       });
+
+      // URL の ?n= で進行を指定できるようにする（例: ?n=10000900624929）
+      (function () {
+        try {
+          var q = new URLSearchParams(location.search).get("n");
+          if (q && /^\d+$/.test(q)) {
+            var qn = BigInt(q);
+            if (qn <= MAX_N) setFromN(qn);
+          }
+        } catch (e) {}
+      })();
 
       render();
     </script>
