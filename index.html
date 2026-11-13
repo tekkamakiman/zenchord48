@@ -3,75 +3,89 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="番号 N を入れると、その N に1対1で対応する4小節のコード進行が鳴るサイト。1小節=12ビット、4小節で全281,474,976,710,656通り（約281兆）。番号から進行を、進行から番号を、自由に行き来できます。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="全コード進行サイト" />
+    <meta property="og:description" content="番号を入れると、その番号に対応する4小節のコード進行が鳴ります。全281兆通り、Nと進行は1対1対応。" />
+    <meta name="twitter:card" content="summary" />
     <link rel="icon" href="data:," />
-    <title>全コード進行サイト（仮）</title>
+    <title>全コード進行サイト</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --bg: #eef0ee;
-        --paper: #fbfcfb;
-        --panel: #ffffff;
-        --panel-2: #e6e9e6;
-        --ink: #191c1f;
-        --ink-2: #4c545a;
-        --ink-3: #8a9297;
-        --line: #ccd1cc;
-        --line-strong: #9aa39c;
-        --accent: #d93a1e;
+        color-scheme: dark;
+        --bg: #0d0e11;
+        --paper: #131418;
+        --panel: #1a1b20;
+        --panel-2: #24262d;
+        --ink: #f1eee7;
+        --ink-2: #b9bcc4;
+        --ink-3: #83868f;
+        --line: #2c2e36;
+        --line-strong: #484a55;
+        --accent: #e05236;
         --accent-ink: #ffffff;
-        --accent-soft: #fbe9e4;
-        --on-cell: #d93a1e;
-        --key-white: #ffffff;
-        --key-black: #23262a;
-        --cell-off: #eef0ee;
-        --cell-off-black: #d8dcd8;
-        --shadow: 0 1px 0 rgba(25, 28, 31, .08), 0 10px 28px -18px rgba(25, 28, 31, .35);
+        --accent-soft: #3a2019;
+        --on-cell: #cf4429;
+        --gold: #d9a441;
+        --key-white: #f4f1ea;
+        --key-black: #101013;
+        --cell-off: #22242a;
+        --cell-off-black: #17181d;
+        --shadow: 0 1px 0 rgba(0,0,0,.4), 0 12px 30px -18px rgba(0,0,0,.85);
         --radius: 10px;
       }
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg: #121417;
-          --paper: #17191d;
-          --panel: #1d2025;
-          --panel-2: #262a30;
-          --ink: #eef1f2;
-          --ink-2: #b6bec4;
-          --ink-3: #7e878e;
-          --line: #33383e;
-          --line-strong: #4b525a;
-          --accent: #ff6a4d;
-          --accent-ink: #1b0f0b;
-          --accent-soft: #3a2019;
-          --on-cell: #ff6a4d;
-          --key-white: #dfe3e5;
-          --key-black: #0c0d0f;
-          --cell-off: #262a30;
-          --cell-off-black: #31363c;
-          --shadow: 0 1px 0 rgba(0,0,0,.4), 0 12px 30px -18px rgba(0,0,0,.8);
-        }
-      }
       * { box-sizing: border-box; }
-      html { -webkit-text-size-adjust: 100%; scroll-padding-bottom: 220px; }
+      html { -webkit-text-size-adjust: 100%; scroll-padding-bottom: 300px; }
       body {
         margin: 0;
-        background: var(--bg);
+        background: radial-gradient(1200px 620px at 50% -8%, #1c1d23 0%, var(--bg) 55%) no-repeat, var(--bg);
         color: var(--ink);
         font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
         line-height: 1.65;
       }
       .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
-      main { max-width: 1120px; margin: 0 auto; padding: 28px 18px 150px; }
-      @media (min-width: 760px) { main { padding: 44px 28px 170px; } }
+      main { max-width: 1120px; margin: 0 auto; padding: 28px 18px 210px; }
+      @media (min-width: 760px) { main { padding: 44px 28px 230px; } }
+      a { color: var(--accent); }
+
+      /* ---------- site header ---------- */
+      .site-head {
+        position: sticky; top: 0; z-index: 40;
+        background: rgba(13, 14, 17, .94);
+        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      }
+      .site-head-inner {
+        max-width: 1120px; margin: 0 auto; padding: 12px 18px;
+        display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      }
+      @media (min-width: 760px) { .site-head-inner { padding: 14px 28px; } }
+      .brand { display: flex; align-items: center; gap: 9px; font-weight: 900; font-size: 16px; letter-spacing: .02em; }
+      .brand-mark { width: 11px; height: 11px; background: var(--accent); border-radius: 2px; flex: 0 0 auto; }
+      .site-nav { display: flex; gap: 18px; font-size: 13px; }
+      .site-nav a { color: var(--ink-2); text-decoration: none; font-weight: 700; }
+      .site-nav a:hover { color: var(--ink); }
+      /* 鍵盤ストライプ（装飾）: 白鍵の上に黒鍵、底辺はピアノの赤フェルト */
+      .keystrip {
+        height: 18px;
+        border-bottom: 3px solid var(--accent);
+        background:
+          repeating-linear-gradient(90deg, #0a0a0c 0 14px, transparent 14px 64px),
+          repeating-linear-gradient(90deg, #efece4 0 62px, #a9a499 62px 64px);
+        background-size: 100% 11px, 100% 100%;
+        background-repeat: repeat-x;
+        background-position: 57px 0, 0 0;
+      }
 
       /* ---------- intro ---------- */
       .intro { max-width: 720px; }
       h1 { font-size: clamp(26px, 5.4vw, 40px); font-weight: 900; letter-spacing: .01em; line-height: 1.25; margin: 0 0 12px; }
       .intro p { margin: 0 0 10px; color: var(--ink-2); font-size: 15px; }
       .intro p strong { color: var(--ink); }
-      .intro .big-num { color: var(--accent); font-weight: 700; }
+      .intro .big-num { color: var(--gold); font-weight: 700; }
 
       /* ---------- N counter ---------- */
       .counter {
@@ -120,6 +134,7 @@
       .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
       .btn.primary:hover { filter: brightness(1.07); background: var(--accent); }
       .btn.small { padding: 7px 12px; font-size: 13px; }
+      .btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
       .stepper { display: flex; gap: 8px; }
       .stepper .btn { min-width: 52px; font-size: 18px; line-height: 1; }
       .n-msg { width: 100%; font-size: 13px; color: var(--accent); min-height: 1.2em; margin: 0; }
@@ -204,8 +219,8 @@
       .bar-dial button:active { background: var(--accent-soft); }
       .grid-note { font-size: 12.5px; color: var(--ink-3); margin-top: 10px; }
 
-      /* ---------- presets ---------- */
-      section.block { margin-top: 40px; }
+      /* ---------- sections ---------- */
+      section.block { margin-top: 48px; }
       section.block h2 { font-size: 19px; font-weight: 900; margin: 0 0 6px; }
       section.block .lead { font-size: 13.5px; color: var(--ink-2); margin: 0 0 14px; max-width: 640px; }
       .preset-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); }
@@ -220,7 +235,10 @@
       .preset .p-chords { display: block; font-size: 13px; color: var(--ink-2); margin-top: 2px; overflow-wrap: anywhere; }
       .preset .p-n { display: block; font-size: 11px; color: var(--ink-3); margin-top: 4px; word-break: break-all; }
 
-      /* ---------- about ---------- */
+      /* ---------- howto / about ---------- */
+      .howto-list { margin: 0; padding-left: 1.4em; max-width: 720px; }
+      .howto-list li { font-size: 14px; color: var(--ink-2); margin-bottom: 10px; }
+      .howto-list li strong { color: var(--ink); }
       .about-grid { display: grid; gap: 22px; }
       @media (min-width: 820px) { .about-grid { grid-template-columns: 1fr 1fr; } }
       .about-grid h3 { font-size: 15px; font-weight: 900; margin: 0 0 6px; }
@@ -229,17 +247,27 @@
       .about-grid ul { margin: 0; padding-left: 1.2em; }
       .about-grid li { margin-bottom: 4px; }
       .about-grid .mono { font-size: 12.5px; }
+      .about-text { max-width: 720px; }
+      .about-text p { font-size: 14px; color: var(--ink-2); margin: 0 0 10px; }
+      .about-text p strong { color: var(--ink); }
       .fact-table { width: 100%; border-collapse: collapse; font-size: 13px; }
       .fact-table th, .fact-table td { padding: 7px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
       .fact-table th { color: var(--ink-3); font-weight: 700; white-space: nowrap; width: 38%; }
       .fact-table td { color: var(--ink-2); }
       .fact-table td b { color: var(--ink); }
 
+      /* ---------- footer ---------- */
+      .site-foot {
+        border-top: 1px solid var(--line); margin-top: 56px; padding-top: 20px;
+        font-size: 12.5px; color: var(--ink-3);
+        display: flex; flex-wrap: wrap; gap: 6px 22px; justify-content: space-between;
+      }
+
       /* ---------- player bar ---------- */
       .player {
         position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
         background: var(--panel); border-top: 1px solid var(--line-strong);
-        box-shadow: 0 -8px 30px -18px rgba(0,0,0,.45);
+        box-shadow: 0 -8px 30px -18px rgba(0,0,0,.6);
         padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
       }
       .player-inner {
@@ -267,6 +295,27 @@
       .ctl label { font-weight: 700; white-space: nowrap; }
       .ctl output { min-width: 3.2em; }
       input[type="range"] { accent-color: var(--accent); width: 110px; }
+      /* テンポの BPM 入力とメトロノームのスイッチ */
+      .switch {
+        appearance: none; border: 1px solid var(--line-strong); background: var(--panel-2);
+        width: 44px; height: 24px; border-radius: 999px; cursor: pointer; padding: 0;
+        position: relative; flex: 0 0 auto; transition: background .15s ease;
+      }
+      .switch .knob {
+        position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%;
+        background: var(--ink-2); transition: transform .15s ease, background .15s ease;
+      }
+      .switch[aria-checked="true"] { background: var(--accent); border-color: var(--accent); }
+      .switch[aria-checked="true"] .knob { transform: translateX(20px); background: #fff; }
+      .bpm-input {
+        width: 4.4em; font-size: 14px; padding: 6px 8px; text-align: right;
+        border: 1px solid var(--line-strong); border-radius: 6px;
+        background: var(--paper); color: var(--ink);
+      }
+      .bpm-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+      .bpm-unit { font-weight: 700; }
+      #fixBtn { display: none; }
+      #fixBtn.show { display: inline-block; }
       @media (max-width: 560px) {
         .player { padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); }
         .player-inner { gap: 6px 10px; }
@@ -281,9 +330,20 @@
     </style>
   </head>
   <body>
+    <header class="site-head">
+      <div class="site-head-inner">
+        <div class="brand"><span class="brand-mark" aria-hidden="true"></span>全コード進行サイト</div>
+        <nav class="site-nav" aria-label="ページ内リンク">
+          <a href="#howto">遊び方</a>
+          <a href="#mechanism">仕組み</a>
+          <a href="#about">このサイトについて</a>
+        </nav>
+      </div>
+      <div class="keystrip" aria-hidden="true"></div>
+    </header>
     <main>
       <div class="intro">
-        <h1>全コード進行サイト（仮）</h1>
+        <h1>全コード進行サイト</h1>
         <p>番号 <strong>N</strong> を入れると、その N に対応する <strong>4小節のコード進行</strong> が鳴ります。N と進行は1対1対応で、変換ルールに好みは入りません。全俳句サイトの、コード版です。</p>
         <p>1小節＝和音1つ。12鍵（ド〜シ）のオン／オフで <strong>12ビット＝4,096通り</strong>、4小節で <strong>48ビット＝<span class="big-num mono">281,474,976,710,656</span>通り</strong>（約281兆）。1小節1秒で全部聴くと約3,600万年かかります。</p>
       </div>
@@ -309,6 +369,7 @@
             <button class="btn mono" id="nPlus" type="button" aria-label="Nを1増やす">＋</button>
           </div>
           <button class="btn" id="randomBtn" type="button">ランダム</button>
+          <button class="btn" id="endlessBtn" type="button" aria-pressed="false">無限ランダム</button>
           <button class="btn" id="copyBtn" type="button">URLをコピー</button>
           <p class="n-msg" id="nMsg" role="status"></p>
         </div>
@@ -330,8 +391,23 @@
         <div class="preset-grid" id="presetGrid"></div>
       </section>
 
-      <!-- about -->
-      <section class="block">
+      <!-- how to play -->
+      <section class="block" id="howto">
+        <h2>遊び方</h2>
+        <p class="lead">決まった遊び方はありませんが、入口になりそうなものを並べておきます。</p>
+        <ol class="howto-list">
+          <li><strong>自分の番号を聴く。</strong>誕生日（1990年4月12日なら 19900412）、記念日、電話番号、好きな数字。どんな数字にも、必ず1つだけ対応する進行があります。</li>
+          <li><strong>グリッドを触って和音を作る。</strong>マスをタップして音を増やしたり減らしたり。名前のある和音（C、Dm、G7 など）に一致すると、コード名が表示されます。</li>
+          <li><strong>ダイヤルを1ずつ回す。</strong>各小節の −／＋ で値を1ずつ変えると、進行が少しずつ姿を変えます。「隣の番号」に名曲の原型が隠れているかもしれません。</li>
+          <li><strong>プリセットから出発する。</strong>王道進行などの有名な進行を出して、そこから1音だけ動かして聴き比べるのがおすすめです。</li>
+          <li><strong>URLで共有する。</strong>「URLをコピー」で、いまの進行そのものへのリンクをコピーできます。あなたの番号の進行を、誰かにそのまま聴かせられます。</li>
+          <li><strong>無限ランダムで流しっぱなし。</strong>「無限ランダム」をオンにすると、4小節ごとに新しいランダムな進行へ切り替わり、無限に再生し続けます。気に入った進行に出会ったら「この進行を固定」で止めて、番号を控えてください。</li>
+          <li><strong>メトロノームで練習のお供に。</strong>プレイヤーのメトロノームをオンにすると、1小節＝4拍のクリックが再生に同期して鳴ります。BPMはテンポ（速さ）と連動しています。</li>
+        </ol>
+      </section>
+
+      <!-- mechanism -->
+      <section class="block" id="mechanism">
         <h2>仕組み</h2>
         <div class="about-grid">
           <div>
@@ -358,6 +434,22 @@
           </div>
         </div>
       </section>
+
+      <!-- about -->
+      <section class="block" id="about">
+        <h2>このサイトについて</h2>
+        <div class="about-text">
+          <p><strong>全コード進行サイト</strong>は、「考えうるすべての4小節コード進行に番号を振ったらどうなるか」を、そのまま形にしたサイトです。番号 N（0〜281,474,976,710,655）を1つ決めれば進行が一意に決まり、逆にどんな4小節の進行にも必ず1つの N が対応します。有名な進行も、まだ誰も聴いたことのない進行も、281兆通りの中の1つとして対等に並んでいます。</p>
+          <p>方針はシンプルで、<strong>変換ルールに恣意性を持ち込まない</strong>ことです。ベース音の追加、転回形への寄せ、コード名が付く進行への優遇はしません。名前のない和音や無音も含めて、全部が「正解」です。だからこそ、誕生日の数字が思いがけず美しい進行になったり、王道進行のすぐ隣に未知の響きがあったりする偶然が楽しめます。</p>
+          <p>技術的には、音はすべてお使いのブラウザの中で Web Audio API により合成されており、音声ファイルのダウンロードは不要です。入力した番号や操作内容がサーバーへ送信されることもありません。進行は URL の <span class="mono">?n=</span> にそのまま入るので、リンクを送るだけで相手に同じ進行を聴かせることができます。</p>
+          <p>姉妹的な発想として、すべての俳句を列挙する「全俳句サイト」があります。本サイトはその音楽版として、コード進行の全体集合を番号で辿れるようにしたものです。今日の番号との出会いを楽しんでください。</p>
+        </div>
+      </section>
+
+      <footer class="site-foot">
+        <span>全コード進行サイト — 番号で鳴らす、281兆通りのコード進行</span>
+        <span>© 2026 全コード進行サイト</span>
+      </footer>
     </main>
 
     <!-- player -->
@@ -372,10 +464,16 @@
           <div class="now-chords" id="nowChords">—</div>
           <div class="dots" id="dots" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
         </div>
+        <button class="btn small" id="fixBtn" type="button">この進行を固定</button>
         <div class="ctl">
-          <label for="tempoRange">速さ</label>
-          <input type="range" id="tempoRange" min="0.4" max="2" step="0.1" value="1" />
-          <output class="mono" id="tempoOut" for="tempoRange">1.0秒/小節</output>
+          <label for="tempoRange">テンポ</label>
+          <input type="range" id="tempoRange" min="60" max="180" step="1" value="120" aria-label="テンポ（BPM）" />
+          <input type="number" id="bpmInput" class="mono bpm-input" min="60" max="180" step="1" value="120" aria-label="BPM（1小節＝4拍）" />
+          <span class="bpm-unit">BPM</span>
+        </div>
+        <div class="ctl">
+          <label id="metroLabel">メトロノーム</label>
+          <button type="button" id="metroToggle" class="switch" role="switch" aria-checked="false" aria-labelledby="metroLabel"><span class="knob"></span></button>
         </div>
         <div class="ctl">
           <label for="volRange">音量</label>
@@ -398,6 +496,15 @@
       function freqOf(pc) { return 261.6256 * Math.pow(2, pc / 12); } // ド4 = C4
       function popcount(x) { var c = 0; while (x) { x &= x - 1; c++; } return c; }
       function maskOf(notes) { var m = 0; for (var i = 0; i < notes.length; i++) m |= (1 << notes[i]); return m; }
+      // ランダムな N（0 〜 2^48-1）を1つ作る
+      function randomN() {
+        var buf = new Uint8Array(6);
+        if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(buf);
+        else for (var i = 0; i < 6; i++) buf[i] = Math.floor(Math.random() * 256);
+        var n = 0n;
+        for (var j = 0; j < 6; j++) n = n * 256n + BigInt(buf[j]);
+        return n;
+      }
 
       /* ================= コード名判定 ================= */
       // 根音からの半音間隔（ソート済み）→ 接尾辞
@@ -565,6 +672,7 @@
         btn.querySelector(".p-n").textContent = "N = " + n.toLocaleString("ja-JP");
         btn.addEventListener("click", function () {
           stopPlayback();
+          setEndless(false);
           bars = masks.slice();
           render();
           startPlayback();
@@ -664,10 +772,22 @@
         if (!ensureCtx()) return;
         playMask(master, mask, actx.currentTime + 0.01, dur || 1.2);
       }
+      // メトロノームのクリック: 短い打音。1拍目（小節の頭）だけ高く・強くする
+      function clickSound(dest, t, accent) {
+        var o = actx.createOscillator(); o.type = "sine";
+        o.frequency.value = accent ? 1760 : 1175;
+        var g = actx.createGain();
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(accent ? 0.5 : 0.34, t + 0.002);
+        g.gain.exponentialRampToValueAtTime(0.0008, t + 0.05);
+        o.connect(g); g.connect(dest);
+        o.start(t); o.stop(t + 0.07);
+      }
 
       /* ================= ループ再生 ================= */
       var playing = false, schedTimer = null, hlTimer = null,
-          nextTime = 0, nextBar = 0, queue = [], session = null, barDur = 1.0;
+          nextTime = 0, nextBar = 0, queue = [], session = null, barDur = 2.0, // 既定テンポ 120 BPM → 240/120 = 2.0秒/小節
+          schedCount = 0, metroOn = false, endlessOn = false;
       var playBtn = document.getElementById("playBtn"),
           playIcon = document.getElementById("playIcon"),
           stopIcon = document.getElementById("stopIcon"),
@@ -679,21 +799,34 @@
           barEls[i].root.classList.toggle("playing", i === idx);
           dots[i].classList.toggle("on", i === idx);
         }
-        nowLabel.textContent = idx >= 0 ? ("再生中：第" + (idx + 1) + "小節") : "4小節ループ";
+        nowLabel.textContent = idx >= 0
+          ? ("再生中：第" + (idx + 1) + "小節" + (endlessOn ? "｜無限ランダム" : ""))
+          : (endlessOn ? "無限ランダム" : "4小節ループ");
       }
       function startPlayback() {
         if (!ensureCtx()) return;
         if (playing) return;
         playing = true;
         session = actx.createGain(); session.gain.value = 1; session.connect(master);
-        nextBar = 0; queue = [];
+        nextBar = 0; queue = []; schedCount = 0;
         nextTime = actx.currentTime + 0.06;
         schedTimer = setInterval(function () {
           while (nextTime < actx.currentTime + 0.3) {
+            // 無限ランダム: 1周（4小節）ごとに新しいランダムな N へ切り替える
+            if (endlessOn && nextBar === 0 && schedCount >= 4) {
+              setFromN(randomN());
+              render();
+            }
             playMask(session, bars[nextBar], nextTime, Math.max(barDur * 1.6, 0.7));
+            // メトロノーム: 1小節=4拍、拍頭はアクセント
+            if (metroOn) {
+              var beat = barDur / 4;
+              for (var k = 0; k < 4; k++) clickSound(session, nextTime + k * beat, k === 0);
+            }
             queue.push({ bar: nextBar, time: nextTime });
             nextTime += barDur;
             nextBar = (nextBar + 1) % 4;
+            schedCount++;
           }
         }, 90);
         hlTimer = setInterval(function () {
@@ -725,14 +858,47 @@
       }
       playBtn.addEventListener("click", function () { playing ? stopPlayback() : startPlayback(); });
 
+      /* ================= 無限ランダム ================= */
+      var endlessBtn = document.getElementById("endlessBtn"),
+          fixBtn = document.getElementById("fixBtn");
+      function setEndless(on) {
+        endlessOn = !!on;
+        endlessBtn.setAttribute("aria-pressed", endlessOn ? "true" : "false");
+        fixBtn.classList.toggle("show", endlessOn);
+        if (endlessOn && !playing) startPlayback();
+        if (!playing) setHighlight(-1);
+      }
+      endlessBtn.addEventListener("click", function () { setEndless(!endlessOn); });
+      // いま鳴っている進行で固定し、通常のループ再生に戻る（URL は render() で ?n= 同期済み）
+      fixBtn.addEventListener("click", function () { setEndless(false); });
+
       /* ================= コントロール ================= */
       var tempoRange = document.getElementById("tempoRange"),
-          tempoOut = document.getElementById("tempoOut"),
           volRange = document.getElementById("volRange"),
-          volOut = document.getElementById("volOut");
+          volOut = document.getElementById("volOut"),
+          bpmInput = document.getElementById("bpmInput"),
+          metroToggle = document.getElementById("metroToggle");
+      // テンポは BPM が本体（範囲 60〜180、既定 120）。1小節=4拍なので、
+      // 再生スケジューラとメトロノームが使う秒/小節は barDur = 240 / BPM で導出する。
+      var BPM_MIN = 60, BPM_MAX = 180, bpm = 120;
+      function setBpm(v) {
+        bpm = Math.min(BPM_MAX, Math.max(BPM_MIN, Math.round(v)));
+        barDur = 240 / bpm;
+        tempoRange.value = bpm;
+        bpmInput.value = bpm;
+      }
       tempoRange.addEventListener("input", function () {
-        barDur = parseFloat(tempoRange.value);
-        tempoOut.textContent = barDur.toFixed(1) + "秒/小節";
+        setBpm(parseFloat(tempoRange.value));
+      });
+      bpmInput.addEventListener("change", function () {
+        var v = parseFloat(bpmInput.value);
+        if (!isFinite(v)) { bpmInput.value = bpm; return; }
+        setBpm(v);
+      });
+      setBpm(120); // スライダー・数値入力・barDur を既定テンポで同期
+      metroToggle.addEventListener("click", function () {
+        metroOn = !metroOn;
+        metroToggle.setAttribute("aria-checked", metroOn ? "true" : "false");
       });
       volRange.addEventListener("input", function () {
         volLevel = parseInt(volRange.value, 10) / 100;
@@ -750,6 +916,7 @@
         try { n = BigInt(raw); } catch (err) { nMsg.textContent = "読み取れない数でした。"; return; }
         if (n > MAX_N) { nMsg.textContent = "上限は 281,474,976,710,655（2^48 − 1）です。"; return; }
         stopPlayback();
+        setEndless(false);
         setFromN(n);
         render();
       });
@@ -757,13 +924,9 @@
       makeStepper(document.getElementById("nPlus"), function () { setFromN(currentN() + 1n); render(); }, 1);
       // ↑ makeStepper は符号を内部で使うため、ラッパーで方向を吸収
       document.getElementById("randomBtn").addEventListener("click", function () {
-        var buf = new Uint8Array(6);
-        if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(buf);
-        else for (var i = 0; i < 6; i++) buf[i] = Math.floor(Math.random() * 256);
-        var n = 0n;
-        for (var j = 0; j < 6; j++) n = n * 256n + BigInt(buf[j]);
         stopPlayback();
-        setFromN(n);
+        setEndless(false);
+        setFromN(randomN());
         render();
       });
       document.getElementById("copyBtn").addEventListener("click", function () {
