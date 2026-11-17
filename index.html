@@ -6,10 +6,21 @@
     <meta name="color-scheme" content="dark" />
     <meta name="description" content="番号 N を入れると、その N に1対1で対応する4小節のコード進行が鳴るサイト。1小節=12ビット、4小節で全281,474,976,710,656通り（約281兆）。番号から進行を、進行から番号を、自由に行き来できます。" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="全コード進行サイト" />
     <meta property="og:title" content="全コード進行サイト" />
     <meta property="og:description" content="番号を入れると、その番号に対応する4小節のコード進行が鳴ります。全281兆通り、Nと進行は1対1対応。" />
-    <meta name="twitter:card" content="summary" />
-    <link rel="icon" href="data:," />
+    <meta property="og:url" content="https://zenchord48.com/" />
+    <meta property="og:image" content="https://zenchord48.com/ogp.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="全コード進行サイト — 番号を入れると、対応する4小節のコード進行が鳴ります" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="全コード進行サイト" />
+    <meta name="twitter:description" content="番号を入れると、その番号に対応する4小節のコード進行が鳴ります。全281兆通り、Nと進行は1対1対応。" />
+    <meta name="twitter:image" content="https://zenchord48.com/ogp.png" />
+    <meta name="theme-color" content="#0d0e11" />
+    <link rel="canonical" href="https://zenchord48.com/" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <title>全コード進行サイト</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -371,6 +382,7 @@
           <button class="btn" id="randomBtn" type="button">ランダム</button>
           <button class="btn" id="endlessBtn" type="button" aria-pressed="false">無限ランダム</button>
           <button class="btn" id="copyBtn" type="button">URLをコピー</button>
+          <button class="btn" id="shareXBtn" type="button">Xでシェア</button>
           <p class="n-msg" id="nMsg" role="status"></p>
         </div>
       </div>
@@ -929,6 +941,14 @@
         setFromN(randomN());
         render();
       });
+      document.getElementById("shareXBtn").addEventListener("click", function () {
+        var url = location.origin + location.pathname + "?n=" + currentN().toString();
+        var names = bars.map(function (m) { return chordName(m) || ("#" + m); }).join(" → ");
+        var text = "私の番号 N=" + currentN().toString() + " の進行は " + names + " でした🎹 全281兆通りのコード進行から1つだけ鳴る番号です。";
+        var intent = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(url);
+        window.open(intent, "_blank", "noopener,width=600,height=540");
+      });
+
       document.getElementById("copyBtn").addEventListener("click", function () {
         var text = location.origin + location.pathname + "?n=" + currentN().toString();
         function done() { nMsg.textContent = "この進行の URL をコピーしました。"; }
