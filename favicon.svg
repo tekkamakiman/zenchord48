@@ -1,21 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#0d0e11"/>
+  <rect width="64" height="64" rx="12" fill="#121212"/>
   <g>
-    <rect x="10" y="10" width="9" height="9" rx="2" fill="#e05236"/>
-    <rect x="23" y="10" width="9" height="9" rx="2" fill="#22242a"/>
-    <rect x="36" y="10" width="9" height="9" rx="2" fill="#e05236"/>
-    <rect x="49" y="10" width="9" height="9" rx="2" fill="#22242a"/>
-    <rect x="10" y="23" width="9" height="9" rx="2" fill="#22242a"/>
-    <rect x="23" y="23" width="9" height="9" rx="2" fill="#e05236"/>
-    <rect x="36" y="23" width="9" height="9" rx="2" fill="#22242a"/>
-    <rect x="49" y="23" width="9" height="9" rx="2" fill="#22242a"/>
-    <rect x="10" y="36" width="9" height="9" rx="2" fill="#22242a"/>
-    <rect x="23" y="36" width="9" height="9" rx="2" fill="#22242a"/>
-    <rect x="36" y="36" width="9" height="9" rx="2" fill="#d9a441"/>
-    <rect x="49" y="36" width="9" height="9" rx="2" fill="#e05236"/>
-    <rect x="10" y="49" width="9" height="9" rx="2" fill="#e05236"/>
-    <rect x="23" y="49" width="9" height="9" rx="2" fill="#22242a"/>
-    <rect x="36" y="49" width="9" height="9" rx="2" fill="#22242a"/>
-    <rect x="49" y="49" width="9" height="9" rx="2" fill="#e05236"/>
+    <rect x="10" y="10" width="9" height="9" rx="2" fill="#a8dcf5"/>
+    <rect x="23" y="10" width="9" height="9" rx="2" fill="#252525"/>
+    <rect x="36" y="10" width="9" height="9" rx="2" fill="#a8dcf5"/>
+    <rect x="49" y="10" width="9" height="9" rx="2" fill="#252525"/>
+    <rect x="10" y="23" width="9" height="9" rx="2" fill="#252525"/>
+    <rect x="23" y="23" width="9" height="9" rx="2" fill="#a8dcf5"/>
+    <rect x="36" y="23" width="9" height="9" rx="2" fill="#252525"/>
+    <rect x="49" y="23" width="9" height="9" rx="2" fill="#252525"/>
+    <rect x="10" y="36" width="9" height="9" rx="2" fill="#252525"/>
+    <rect x="23" y="36" width="9" height="9" rx="2" fill="#252525"/>
+    <rect x="36" y="36" width="9" height="9" rx="2" fill="#38b6e3"/>
+    <rect x="49" y="36" width="9" height="9" rx="2" fill="#a8dcf5"/>
+    <rect x="10" y="49" width="9" height="9" rx="2" fill="#a8dcf5"/>
+    <rect x="23" y="49" width="9" height="9" rx="2" fill="#252525"/>
+    <rect x="36" y="49" width="9" height="9" rx="2" fill="#252525"/>
+    <rect x="49" y="49" width="9" height="9" rx="2" fill="#a8dcf5"/>
   </g>
 </svg>

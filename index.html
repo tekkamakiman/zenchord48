@@ -18,7 +18,7 @@
     <meta name="twitter:title" content="全コード進行サイト" />
     <meta name="twitter:description" content="番号を入れると、その番号に対応する4小節のコード進行が鳴ります。全281兆通り、Nと進行は1対1対応。" />
     <meta name="twitter:image" content="https://zenchord48.com/ogp.png" />
-    <meta name="theme-color" content="#0d0e11" />
+    <meta name="theme-color" content="#121212" />
     <link rel="canonical" href="https://zenchord48.com/" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <title>全コード進行サイト</title>
@@ -28,32 +28,34 @@
     <style>
       :root {
         color-scheme: dark;
-        --bg: #0d0e11;
-        --paper: #131418;
-        --panel: #1a1b20;
-        --panel-2: #24262d;
-        --ink: #f1eee7;
-        --ink-2: #b9bcc4;
-        --ink-3: #83868f;
-        --line: #2c2e36;
-        --line-strong: #484a55;
-        --accent: #e05236;
-        --accent-ink: #ffffff;
-        --accent-soft: #3a2019;
-        --on-cell: #cf4429;
-        --gold: #d9a441;
-        --key-white: #f4f1ea;
+        --bg: #0b0b0d;
+        --paper: #121212;
+        --panel: #181818;
+        --panel-2: #1f1f1f;
+        --panel-3: #252525;
+        --ink: #ffffff;
+        --ink-2: #b3b3b3;
+        --ink-3: #7d7d7d;
+        --line: #2a2a2a;
+        --line-strong: #3d3d3d;
+        --accent: #38b6e3;
+        --accent-deep: #0a3447;
+        --pale: #a8dcf5;
+        --pale-light: #c4e8fa;
+        --accent-ink: #06222f;
+        --on-cell: #17648f;
+        --key-white: #e9e9e9;
         --key-black: #101013;
-        --cell-off: #22242a;
-        --cell-off-black: #17181d;
-        --shadow: 0 1px 0 rgba(0,0,0,.4), 0 12px 30px -18px rgba(0,0,0,.85);
-        --radius: 10px;
+        --cell-off: #1f1f1f;
+        --cell-off-black: #151515;
+        --shadow: rgba(0,0,0,0.5) 0 8px 24px;
+        --radius: 12px;
       }
       * { box-sizing: border-box; }
       html { -webkit-text-size-adjust: 100%; scroll-padding-bottom: 300px; }
       body {
         margin: 0;
-        background: radial-gradient(1200px 620px at 50% -8%, #1c1d23 0%, var(--bg) 55%) no-repeat, var(--bg);
+        background: var(--bg);
         color: var(--ink);
         font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
         line-height: 1.65;
@@ -66,7 +68,7 @@
       /* ---------- site header ---------- */
       .site-head {
         position: sticky; top: 0; z-index: 40;
-        background: rgba(13, 14, 17, .94);
+        background: rgba(11, 11, 13, .94);
         backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
       }
       .site-head-inner {
@@ -74,18 +76,18 @@
         display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
       }
       @media (min-width: 760px) { .site-head-inner { padding: 14px 28px; } }
-      .brand { display: flex; align-items: center; gap: 9px; font-weight: 900; font-size: 16px; letter-spacing: .02em; }
+      .brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 16px; letter-spacing: .02em; }
       .brand-mark { width: 11px; height: 11px; background: var(--accent); border-radius: 2px; flex: 0 0 auto; }
       .site-nav { display: flex; gap: 18px; font-size: 13px; }
       .site-nav a { color: var(--ink-2); text-decoration: none; font-weight: 700; }
       .site-nav a:hover { color: var(--ink); }
-      /* 鍵盤ストライプ（装飾）: 白鍵の上に黒鍵、底辺はピアノの赤フェルト */
+      /* 鍵盤ストライプ（装飾）: 白鍵の上に黒鍵、底辺はアクセントのライン */
       .keystrip {
         height: 18px;
         border-bottom: 3px solid var(--accent);
         background:
           repeating-linear-gradient(90deg, #0a0a0c 0 14px, transparent 14px 64px),
-          repeating-linear-gradient(90deg, #efece4 0 62px, #a9a499 62px 64px);
+          repeating-linear-gradient(90deg, #e9e9e9 0 62px, #9a9a9a 62px 64px);
         background-size: 100% 11px, 100% 100%;
         background-repeat: repeat-x;
         background-position: 57px 0, 0 0;
@@ -93,10 +95,10 @@
 
       /* ---------- intro ---------- */
       .intro { max-width: 720px; }
-      h1 { font-size: clamp(26px, 5.4vw, 40px); font-weight: 900; letter-spacing: .01em; line-height: 1.25; margin: 0 0 12px; }
+      h1 { font-size: clamp(26px, 5.4vw, 40px); font-weight: 700; letter-spacing: .01em; line-height: 1.25; margin: 0 0 12px; }
       .intro p { margin: 0 0 10px; color: var(--ink-2); font-size: 15px; }
       .intro p strong { color: var(--ink); }
-      .intro .big-num { color: var(--gold); font-weight: 700; }
+      .intro .big-num { color: var(--pale); font-weight: 700; }
 
       /* ---------- N counter ---------- */
       .counter {
@@ -105,9 +107,9 @@
       }
       .counter-head {
         display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px;
-        padding: 14px 18px 0;
+        padding: 16px 18px 0;
       }
-      .counter-head .label { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--ink-3); }
+      .counter-head .label { font-size: 11px; font-weight: 700; letter-spacing: .18em; color: var(--ink-3); }
       .counter-head .range { font-size: 12px; color: var(--ink-3); }
       .n-display {
         padding: 4px 18px 0; overflow-x: auto; scrollbar-width: none;
@@ -124,7 +126,7 @@
       .n-sub b { color: var(--ink); font-weight: 600; }
       .counter-controls {
         display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch;
-        padding: 14px 18px 18px; border-top: 1px dashed var(--line);
+        padding: 14px 18px 18px; border-top: 1px solid var(--line);
         background: var(--paper);
       }
       .n-form { display: flex; flex: 1 1 300px; gap: 8px; min-width: 0; }
@@ -135,20 +137,20 @@
       }
       .n-form input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
       .btn {
-        appearance: none; border: 1px solid var(--line-strong); background: var(--panel);
+        appearance: none; border: 1px solid var(--line-strong); background: var(--panel-2);
         color: var(--ink); font: inherit; font-size: 14px; font-weight: 700;
         padding: 10px 16px; border-radius: 8px; cursor: pointer; white-space: nowrap;
         transition: background .12s ease, transform .05s ease;
       }
-      .btn:hover { background: var(--panel-2); }
+      .btn:hover { background: var(--panel-3); }
       .btn:active { transform: translateY(1px); }
       .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-      .btn.primary:hover { filter: brightness(1.07); background: var(--accent); }
+      .btn.primary:hover { background: var(--accent); filter: brightness(1.08); }
       .btn.small { padding: 7px 12px; font-size: 13px; }
       .btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
       .stepper { display: flex; gap: 8px; }
       .stepper .btn { min-width: 52px; font-size: 18px; line-height: 1; }
-      .n-msg { width: 100%; font-size: 13px; color: var(--accent); min-height: 1.2em; margin: 0; }
+      .n-msg { width: 100%; font-size: 13px; color: var(--pale); min-height: 1.2em; margin: 0; }
       .n-msg:empty { display: none; }
 
       /* ---------- progression summary ---------- */
@@ -156,12 +158,12 @@
         margin-top: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
         font-size: 15px;
       }
-      .prog-summary .ps-label { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--ink-3); margin-right: 2px; }
+      .prog-summary .ps-label { font-size: 11px; font-weight: 700; letter-spacing: .18em; color: var(--ink-3); margin-right: 2px; }
       .ps-chord {
         font-weight: 700; background: var(--panel); border: 1px solid var(--line);
         padding: 3px 12px; border-radius: 999px;
       }
-      .ps-chord.unnamed { color: var(--ink-3); font-weight: 500; }
+      .ps-chord.unnamed { color: var(--ink-3); font-weight: 400; }
       .ps-arrow { color: var(--ink-3); }
 
       /* ---------- grid ---------- */
@@ -176,10 +178,10 @@
         box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column;
         transition: border-color .15s ease, box-shadow .15s ease;
       }
-      .bar.playing { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent), var(--shadow); }
+      .bar.playing { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), var(--shadow); }
       .bar-head { padding: 12px 12px 8px; }
       .bar-head-top { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
-      .bar-title { font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--ink-2); }
+      .bar-title { font-size: 11px; font-weight: 700; letter-spacing: .16em; color: var(--ink-2); }
       .bar-listen {
         appearance: none; border: none; background: none; color: var(--ink-3); cursor: pointer;
         padding: 2px; line-height: 0; border-radius: 6px;
@@ -190,10 +192,10 @@
       .bar-meta { font-size: 11.5px; color: var(--ink-3); line-height: 1.5; }
       .bar-meta span { display: block; white-space: nowrap; }
       .chord-name {
-        margin-top: 6px; display: inline-block; font-size: 15px; font-weight: 900;
-        color: var(--accent); min-height: 1.4em;
+        margin-top: 6px; display: inline-block; font-size: 15px; font-weight: 700;
+        color: var(--pale); min-height: 1.4em;
       }
-      .chord-name.unnamed { color: var(--ink-3); font-weight: 500; font-size: 12.5px; }
+      .chord-name.unnamed { color: var(--ink-3); font-weight: 400; font-size: 12.5px; }
       .cells { border-top: 1px solid var(--line); }
       .cell {
         display: flex; align-items: stretch; width: 100%; padding: 0; margin: 0;
@@ -210,12 +212,12 @@
       .cell .pad {
         flex: 1; display: flex; align-items: center; justify-content: space-between;
         padding: 0 10px; font-size: 12.5px; color: var(--ink-2);
-        background: var(--cell-off); transition: background .1s ease;
+        background: var(--cell-off);
       }
       .cell .pad .bit { font-size: 11px; color: var(--ink-3); }
       .cell.black-row .pad { background: var(--cell-off-black); }
-      .cell[aria-pressed="true"] .pad { background: var(--on-cell); color: var(--accent-ink); font-weight: 700; }
-      .cell[aria-pressed="true"] .pad .bit { color: var(--accent-ink); opacity: .75; }
+      .cell[aria-pressed="true"] .pad { background: var(--on-cell); color: #ffffff; font-weight: 700; }
+      .cell[aria-pressed="true"] .pad .bit { color: #ffffff; opacity: .75; }
       .cell:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
       .bar-dial {
         display: flex; border-top: 1px solid var(--line); margin-top: auto;
@@ -227,12 +229,12 @@
       }
       .bar-dial button:first-child { border-right: 1px solid var(--line); }
       .bar-dial button:hover { background: var(--panel-2); }
-      .bar-dial button:active { background: var(--accent-soft); }
+      .bar-dial button:active { background: var(--panel-3); }
       .grid-note { font-size: 12.5px; color: var(--ink-3); margin-top: 10px; }
 
       /* ---------- sections ---------- */
       section.block { margin-top: 48px; }
-      section.block h2 { font-size: 19px; font-weight: 900; margin: 0 0 6px; }
+      section.block h2 { font-size: 19px; font-weight: 700; margin: 0 0 6px; }
       section.block .lead { font-size: 13.5px; color: var(--ink-2); margin: 0 0 14px; max-width: 640px; }
       .preset-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); }
       .preset {
@@ -242,7 +244,7 @@
         transition: border-color .12s ease;
       }
       .preset:hover { border-color: var(--accent); }
-      .preset .p-name { font-weight: 900; font-size: 15px; display: block; }
+      .preset .p-name { font-weight: 700; font-size: 15px; display: block; }
       .preset .p-chords { display: block; font-size: 13px; color: var(--ink-2); margin-top: 2px; overflow-wrap: anywhere; }
       .preset .p-n { display: block; font-size: 11px; color: var(--ink-3); margin-top: 4px; word-break: break-all; }
 
@@ -252,7 +254,7 @@
       .howto-list li strong { color: var(--ink); }
       .about-grid { display: grid; gap: 22px; }
       @media (min-width: 820px) { .about-grid { grid-template-columns: 1fr 1fr; } }
-      .about-grid h3 { font-size: 15px; font-weight: 900; margin: 0 0 6px; }
+      .about-grid h3 { font-size: 15px; font-weight: 700; margin: 0 0 6px; }
       .about-grid p, .about-grid li { font-size: 13.5px; color: var(--ink-2); }
       .about-grid p { margin: 0 0 8px; }
       .about-grid ul { margin: 0; padding-left: 1.2em; }
@@ -278,7 +280,7 @@
       .player {
         position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
         background: var(--panel); border-top: 1px solid var(--line-strong);
-        box-shadow: 0 -8px 30px -18px rgba(0,0,0,.6);
+        box-shadow: rgba(0,0,0,0.5) 0 -8px 24px;
         padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
       }
       .player-inner {
@@ -290,25 +292,25 @@
         width: 56px; height: 56px; border-radius: 50%;
         background: var(--accent); color: var(--accent-ink);
         display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 6px 18px -6px var(--accent);
+        box-shadow: rgba(0,0,0,0.5) 0 8px 24px;
       }
       .play-btn svg { width: 24px; height: 24px; display: block; }
       .play-btn:active { transform: scale(.96); }
       .now {
         flex: 1 1 130px; min-width: 120px;
       }
-      .now .now-label { font-size: 11px; font-weight: 700; letter-spacing: .14em; color: var(--ink-3); }
+      .now .now-label { font-size: 11px; font-weight: 700; letter-spacing: .16em; color: var(--ink-3); }
       .now .now-chords { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .dots { display: flex; gap: 6px; margin-top: 4px; }
-      .dots span { width: 22px; height: 5px; border-radius: 3px; background: var(--panel-2); border: 1px solid var(--line); }
-      .dots span.on { background: var(--accent); border-color: var(--accent); }
+      .dots span { width: 22px; height: 5px; border-radius: 3px; background: var(--panel-3); border: 1px solid var(--line); }
+      .dots span.on { background: var(--pale); border-color: var(--pale); }
       .ctl { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-2); }
       .ctl label { font-weight: 700; white-space: nowrap; }
       .ctl output { min-width: 3.2em; }
       input[type="range"] { accent-color: var(--accent); width: 110px; }
       /* テンポの BPM 入力とメトロノームのスイッチ */
       .switch {
-        appearance: none; border: 1px solid var(--line-strong); background: var(--panel-2);
+        appearance: none; border: 1px solid var(--line-strong); background: var(--panel-3);
         width: 44px; height: 24px; border-radius: 999px; cursor: pointer; padding: 0;
         position: relative; flex: 0 0 auto; transition: background .15s ease;
       }
@@ -338,6 +340,7 @@
         input[type="range"] { width: 72px; }
         .ctl output { display: none; }
       }
+
     </style>
   </head>
   <body>
@@ -815,6 +818,46 @@
           ? ("再生中：第" + (idx + 1) + "小節" + (endlessOn ? "｜無限ランダム" : ""))
           : (endlessOn ? "無限ランダム" : "4小節ループ");
       }
+
+      /* 再生中セルの発光: その小節で鳴っている構成音だけを、淡い水色で「ぽわん」と光らせる。
+         明るさは小節内で対称の山型（サイン波）で、全構成音が同時・同じ光。視覚専用で音には影響しない */
+      var glowBar = -1, glowT0 = 0, glowRAF = null, paintedBar = -1;
+      function clearGlow(barIdx) {
+        if (barIdx < 0) return;
+        var cells = barEls[barIdx].cells;
+        for (var p = 0; p < 12; p++) {
+          var pad = cells[p].querySelector(".pad");
+          pad.style.backgroundColor = "";
+          pad.style.boxShadow = "";
+          pad.style.color = "";
+        }
+      }
+      function paintGlow() {
+        if (!playing) { glowRAF = null; return; }
+        if (paintedBar !== glowBar) { clearGlow(paintedBar); paintedBar = glowBar; }
+        if (glowBar >= 0 && actx) {
+          var pr = (actx.currentTime - glowT0) / barDur;
+          if (pr < 0) pr = 0; else if (pr > 1) pr = 1;
+          var g = Math.sin(Math.PI * pr);
+          var bg = "rgba(168,220,245," + (0.15 + 0.85 * g).toFixed(3) + ")";
+          var sh = "0 0 " + Math.round(6 + 20 * g) + "px rgba(168,220,245," + (0.55 * g).toFixed(3) +
+                   "), inset 0 0 " + Math.round(4 + 10 * g) + "px rgba(196,232,250," + (0.5 * g).toFixed(3) + ")";
+          var cells = barEls[glowBar].cells;
+          for (var p = 0; p < 12; p++) {
+            var pad = cells[p].querySelector(".pad");
+            if (cells[p].getAttribute("aria-pressed") === "true") {
+              pad.style.backgroundColor = bg;
+              pad.style.boxShadow = sh;
+              pad.style.color = g > 0.45 ? "#0a3447" : "";
+            } else {
+              pad.style.backgroundColor = "";
+              pad.style.boxShadow = "";
+              pad.style.color = "";
+            }
+          }
+        }
+        glowRAF = requestAnimationFrame(paintGlow);
+      }
       function startPlayback() {
         if (!ensureCtx()) return;
         if (playing) return;
@@ -842,10 +885,11 @@
           }
         }, 90);
         hlTimer = setInterval(function () {
-          var now = actx.currentTime, cur = -1;
-          while (queue.length && queue[0].time <= now) cur = queue.shift().bar;
-          if (cur >= 0) setHighlight(cur);
+          var now = actx.currentTime, cur = -1, ent = null;
+          while (queue.length && queue[0].time <= now) { ent = queue.shift(); cur = ent.bar; }
+          if (cur >= 0) { setHighlight(cur); glowBar = cur; glowT0 = ent.time; }
         }, 50);
+        if (glowRAF === null) glowRAF = requestAnimationFrame(paintGlow);
         playIcon.style.display = "none"; stopIcon.style.display = "block";
         playBtn.setAttribute("aria-label", "停止");
       }
@@ -865,6 +909,8 @@
           session = null;
         }
         setHighlight(-1);
+        glowBar = -1; clearGlow(paintedBar); paintedBar = -1;
+        if (glowRAF !== null) { cancelAnimationFrame(glowRAF); glowRAF = null; }
         playIcon.style.display = "block"; stopIcon.style.display = "none";
         playBtn.setAttribute("aria-label", "再生");
       }
