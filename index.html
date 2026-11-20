@@ -743,6 +743,16 @@
 
       /* ================= 音 (Web Audio) ================= */
       var actx = null, master = null, volLevel = 0.8;
+      // 残響用のインパルス応答を生成する（ノイズの減衰）。音色の厚み付け専用で、定義・ボイシングには影響しない
+      function makeImpulse(dur, decay) {
+        var rate = actx.sampleRate, len = Math.floor(rate * dur);
+        var buf = actx.createBuffer(2, len, rate);
+        for (var ch = 0; ch < 2; ch++) {
+          var data = buf.getChannelData(ch);
+          for (var i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, decay);
+        }
+        return buf;
+      }
       function ensureCtx() {
         if (!actx) {
           var AC = window.AudioContext || window.webkitAudioContext;
@@ -753,6 +763,10 @@
           master = actx.createGain();
           master.gain.value = volLevel;
           master.connect(comp); comp.connect(actx.destination);
+          var conv = actx.createConvolver();
+          conv.buffer = makeImpulse(1.8, 2.8);
+          var wet = actx.createGain(); wet.gain.value = 0.16;
+          master.connect(conv); conv.connect(wet); wet.connect(comp);
         }
         if (actx.state === "suspended") actx.resume();
         return actx;
@@ -764,7 +778,7 @@
         var g = actx.createGain(), g2 = actx.createGain();
         g2.gain.value = 0.35;
         g.gain.setValueAtTime(0, t);
-        g.gain.linearRampToValueAtTime(peak, t + 0.006);
+        g.gain.linearRampToValueAtTime(peak, t + 0.01);
         g.gain.exponentialRampToValueAtTime(Math.max(peak * 0.25, 0.0008), t + dur * 0.45);
         g.gain.exponentialRampToValueAtTime(0.0006, t + dur);
         o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(dest);
