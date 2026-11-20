@@ -418,6 +418,7 @@
           <li><strong>URLで共有する。</strong>「URLをコピー」で、いまの進行そのものへのリンクをコピーできます。あなたの番号の進行を、誰かにそのまま聴かせられます。</li>
           <li><strong>無限ランダムで流しっぱなし。</strong>「無限ランダム」をオンにすると、4小節ごとに新しいランダムな進行へ切り替わり、無限に再生し続けます。気に入った進行に出会ったら「この進行を固定」で止めて、番号を控えてください。</li>
           <li><strong>メトロノームで練習のお供に。</strong>プレイヤーのメトロノームをオンにすると、1小節＝4拍のクリックが再生に同期して鳴ります。BPMはテンポ（速さ）と連動しています。</li>
+          <li><strong>アレンジ再生で聴き比べる。</strong>プレイヤーの「アレンジ再生」をオンにすると、名前のある和音はルート（根音）を1オクターブ下のベースに置いて、基本形で鳴ります。番号と進行の対応は変わりません。名前のない和音は、そのまま鳴ります。</li>
         </ol>
       </section>
 
@@ -431,7 +432,7 @@
               <li>音は12個：ド=0、ド♯=1、レ=2、……、シ=11 と番号を振る。</li>
               <li>1小節の値は、その小節で鳴らす音の <span class="mono">2<sup>音番号</sup></span> の合計。たとえばド・ミ・ソ（C）は <span class="mono">2<sup>0</sup>+2<sup>4</sup>+2<sup>7</sup> = 145</span>。</li>
               <li>N は4小節を並べたもの：<span class="mono">N = 第1小節×4096<sup>3</sup> + 第2小節×4096<sup>2</sup> + 第3小節×4096 + 第4小節</span>。</li>
-              <li>鳴らすときは、オンの音をド4〜シ4の1オクターブで同時に鳴らすだけ。ベース音の追加や転回などの「味付け」はしない。</li>
+              <li>鳴らすときは、原則としてオンの音をド4〜シ4の1オクターブで同時に鳴らすだけ。ベース音の追加や転回などの「味付け」はしない（任意の「アレンジ再生」をオンにした場合のみ、名前のある和音を基本形で鳴らす。番号との対応は変わらない）。</li>
               <li>楽譜表示はしない。ド♯／レ♭の書き分けで恣意性が入るため。</li>
             </ul>
             <h3 style="margin-top:18px;">コード名について</h3>
@@ -489,6 +490,10 @@
         <div class="ctl">
           <label id="metroLabel">メトロノーム</label>
           <button type="button" id="metroToggle" class="switch" role="switch" aria-checked="false" aria-labelledby="metroLabel"><span class="knob"></span></button>
+        </div>
+        <div class="ctl">
+          <label id="arrLabel">アレンジ再生</label>
+          <button type="button" id="arrToggle" class="switch" role="switch" aria-checked="false" aria-labelledby="arrLabel"><span class="knob"></span></button>
         </div>
         <div class="ctl">
           <label for="volRange">音量</label>
@@ -793,13 +798,49 @@
         flt.connect(dest);
         for (var p = 0; p < 12; p++) if (mask & (1 << p)) voice(flt, freqOf(p), t, dur, peak);
       }
+      // アレンジ再生用: 和音のルート（根音）を返す。判定は chordName と同じ規則で、
+      // 名前が付かない和音は -1。複数候補がある場合は、コード名の表示で先頭に来るルートを採る
+      function rootOf(mask) {
+        if (mask === 0) return -1;
+        var pcs = [];
+        for (var p = 0; p < 12; p++) if (mask & (1 << p)) pcs.push(p);
+        if (pcs.length === 1) return pcs[0];
+        if (pcs.length === 2) {
+          var a = pcs[0], b = pcs[1];
+          if ((b - a + 12) % 12 === 7) return a;
+          if ((a - b + 12) % 12 === 7) return b;
+          return -1;
+        }
+        for (var r = 0; r < 12; r++) {
+          if (!(mask & (1 << r))) continue;
+          var iv = pcs.map(function (p) { return (p - r + 12) % 12; }).sort(function (x, y) { return x - y; });
+          if (Object.prototype.hasOwnProperty.call(PATTERNS, iv.join(","))) return r;
+        }
+        return -1;
+      }
+      var arrOn = false;
+      // アレンジ再生: 名前のある和音は、ルートを1オクターブ下のベースに置き、構成音をルートから上の
+      // 1オクターブに積んで鳴らす。番号・進行の定義（ピッチクラス集合）は変えない、再生だけの並べ替え。
+      // 名前のない和音は通常再生にフォールバックする
+      function playMaskVoiced(dest, mask, t, dur) {
+        var r = arrOn ? rootOf(mask) : -1;
+        if (r < 0) { playMask(dest, mask, t, dur); return; }
+        var peak = Math.min(0.34, 0.62 / Math.sqrt(popcount(mask) + 1));
+        var flt = actx.createBiquadFilter();
+        flt.type = "lowpass"; flt.frequency.value = 4200; flt.Q.value = 0.4;
+        flt.connect(dest);
+        voice(flt, freqOf(r) / 2, t, dur, peak);
+        for (var p = 0; p < 12; p++) if (mask & (1 << p)) {
+          voice(flt, freqOf(r + ((p - r + 12) % 12)), t, dur, peak);
+        }
+      }
       function previewNote(pc) {
         if (!ensureCtx()) return;
         voice(master, freqOf(pc), actx.currentTime + 0.01, 0.7, 0.3);
       }
       function previewChord(mask, dur) {
         if (!ensureCtx()) return;
-        playMask(master, mask, actx.currentTime + 0.01, dur || 1.2);
+        playMaskVoiced(master, mask, actx.currentTime + 0.01, dur || 1.2);
       }
       // メトロノームのクリック: 短い打音。1拍目（小節の頭）だけ高く・強くする
       function clickSound(dest, t, accent) {
@@ -886,7 +927,7 @@
               setFromN(randomN());
               render();
             }
-            playMask(session, bars[nextBar], nextTime, Math.max(barDur * 1.6, 0.7));
+            playMaskVoiced(session, bars[nextBar], nextTime, Math.max(barDur * 1.6, 0.7));
             // メトロノーム: 1小節=4拍、拍頭はアクセント
             if (metroOn) {
               var beat = barDur / 4;
@@ -949,7 +990,8 @@
           volRange = document.getElementById("volRange"),
           volOut = document.getElementById("volOut"),
           bpmInput = document.getElementById("bpmInput"),
-          metroToggle = document.getElementById("metroToggle");
+          metroToggle = document.getElementById("metroToggle"),
+          arrToggle = document.getElementById("arrToggle");
       // テンポは BPM が本体（範囲 60〜180、既定 120）。1小節=4拍なので、
       // 再生スケジューラとメトロノームが使う秒/小節は barDur = 240 / BPM で導出する。
       var BPM_MIN = 60, BPM_MAX = 180, bpm = 120;
@@ -971,6 +1013,10 @@
       metroToggle.addEventListener("click", function () {
         metroOn = !metroOn;
         metroToggle.setAttribute("aria-checked", metroOn ? "true" : "false");
+      });
+      arrToggle.addEventListener("click", function () {
+        arrOn = !arrOn;
+        arrToggle.setAttribute("aria-checked", arrOn ? "true" : "false");
       });
       volRange.addEventListener("input", function () {
         volLevel = parseInt(volRange.value, 10) / 100;
