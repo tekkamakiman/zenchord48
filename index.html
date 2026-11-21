@@ -418,7 +418,7 @@
           <li><strong>URLで共有する。</strong>「URLをコピー」で、いまの進行そのものへのリンクをコピーできます。あなたの番号の進行を、誰かにそのまま聴かせられます。</li>
           <li><strong>無限ランダムで流しっぱなし。</strong>「無限ランダム」をオンにすると、4小節ごとに新しいランダムな進行へ切り替わり、無限に再生し続けます。気に入った進行に出会ったら「この進行を固定」で止めて、番号を控えてください。</li>
           <li><strong>メトロノームで練習のお供に。</strong>プレイヤーのメトロノームをオンにすると、1小節＝4拍のクリックが再生に同期して鳴ります。BPMはテンポ（速さ）と連動しています。</li>
-          <li><strong>アレンジ再生で聴き比べる。</strong>プレイヤーの「アレンジ再生」をオンにすると、名前のある和音はルート（根音）を1オクターブ下のベースに置いて、基本形で鳴ります。番号と進行の対応は変わりません。名前のない和音は、そのまま鳴ります。</li>
+          <li><strong>アレンジ再生で聴き比べる。</strong>プレイヤーの「アレンジ再生」をオンにすると、名前のある和音はルート（根音）を1オクターブ下のベースに置いて、基本形で鳴ります。小節の中では「タン・タ・カ・タン」とリズムを刻みます。番号と進行の対応は変わりません。名前のない和音は、リズムだけ付いてそのまま鳴ります。</li>
         </ol>
       </section>
 
@@ -432,7 +432,7 @@
               <li>音は12個：ド=0、ド♯=1、レ=2、……、シ=11 と番号を振る。</li>
               <li>1小節の値は、その小節で鳴らす音の <span class="mono">2<sup>音番号</sup></span> の合計。たとえばド・ミ・ソ（C）は <span class="mono">2<sup>0</sup>+2<sup>4</sup>+2<sup>7</sup> = 145</span>。</li>
               <li>N は4小節を並べたもの：<span class="mono">N = 第1小節×4096<sup>3</sup> + 第2小節×4096<sup>2</sup> + 第3小節×4096 + 第4小節</span>。</li>
-              <li>鳴らすときは、原則としてオンの音をド4〜シ4の1オクターブで同時に鳴らすだけ。ベース音の追加や転回などの「味付け」はしない（任意の「アレンジ再生」をオンにした場合のみ、名前のある和音を基本形で鳴らす。番号との対応は変わらない）。</li>
+              <li>鳴らすときは、原則としてオンの音をド4〜シ4の1オクターブで同時に鳴らすだけ。ベース音の追加や転回などの「味付け」はしない（任意の「アレンジ再生」をオンにした場合のみ、名前のある和音を基本形で鳴らし、小節の中でリズムを刻む。番号との対応は変わらない）。</li>
               <li>楽譜表示はしない。ド♯／レ♭の書き分けで恣意性が入るため。</li>
             </ul>
             <h3 style="margin-top:18px;">コード名について</h3>
@@ -789,10 +789,10 @@
         o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(dest);
         o1.start(t); o2.start(t); o1.stop(t + dur + 0.05); o2.stop(t + dur + 0.05);
       }
-      function playMask(dest, mask, t, dur) {
+      function playMask(dest, mask, t, dur, vel) {
         var cnt = popcount(mask);
         if (!cnt) return;
-        var peak = Math.min(0.34, 0.62 / Math.sqrt(cnt)) ;
+        var peak = Math.min(0.34, 0.62 / Math.sqrt(cnt)) * (vel == null ? 1 : vel);
         var flt = actx.createBiquadFilter();
         flt.type = "lowpass"; flt.frequency.value = 4200; flt.Q.value = 0.4;
         flt.connect(dest);
@@ -822,16 +822,27 @@
       // アレンジ再生: 名前のある和音は、ルートを1オクターブ下のベースに置き、構成音をルートから上の
       // 1オクターブに積んで鳴らす。番号・進行の定義（ピッチクラス集合）は変えない、再生だけの並べ替え。
       // 名前のない和音は通常再生にフォールバックする
-      function playMaskVoiced(dest, mask, t, dur) {
+      function playMaskVoiced(dest, mask, t, dur, vel, withBass) {
         var r = arrOn ? rootOf(mask) : -1;
-        if (r < 0) { playMask(dest, mask, t, dur); return; }
-        var peak = Math.min(0.34, 0.62 / Math.sqrt(popcount(mask) + 1));
+        if (r < 0) { playMask(dest, mask, t, dur, vel); return; }
+        var peak = Math.min(0.34, 0.62 / Math.sqrt(popcount(mask) + 1)) * (vel == null ? 1 : vel);
         var flt = actx.createBiquadFilter();
         flt.type = "lowpass"; flt.frequency.value = 4200; flt.Q.value = 0.4;
         flt.connect(dest);
-        voice(flt, freqOf(r) / 2, t, dur, peak);
+        if (withBass !== false) voice(flt, freqOf(r) / 2, t, dur, peak);
         for (var p = 0; p < 12; p++) if (mask & (1 << p)) {
           voice(flt, freqOf(r + ((p - r + 12) % 12)), t, dur, peak);
+        }
+      }
+      // アレンジ再生の小節内リズム「タン・タ・カ・タン」: 1拍目、2拍目、2拍目の裏、3拍目に刻む。
+      // ベースは最初と最後のヒットだけ。最後のヒットは小節の残りに響かせる
+      function playBarArranged(dest, mask, t, bd) {
+        var hits = [0, 0.25, 0.375, 0.5];
+        var vels = [1.0, 0.8, 0.8, 0.95];
+        for (var i = 0; i < hits.length; i++) {
+          var last = i === hits.length - 1;
+          var dur = last ? Math.max(bd * 1.1, 0.7) : Math.max(bd * 0.55, 0.45);
+          playMaskVoiced(dest, mask, t + hits[i] * bd, dur, vels[i], i === 0 || last);
         }
       }
       function previewNote(pc) {
@@ -927,7 +938,8 @@
               setFromN(randomN());
               render();
             }
-            playMaskVoiced(session, bars[nextBar], nextTime, Math.max(barDur * 1.6, 0.7));
+            if (arrOn) playBarArranged(session, bars[nextBar], nextTime, barDur);
+            else playMaskVoiced(session, bars[nextBar], nextTime, Math.max(barDur * 1.6, 0.7));
             // メトロノーム: 1小節=4拍、拍頭はアクセント
             if (metroOn) {
               var beat = barDur / 4;
